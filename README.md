@@ -2,6 +2,8 @@
 
 A collection of modern, lightweight, and fast share buttons for social networks and messaging apps. The buttons are built in a modular way using pure HTML, CSS, and Vanilla JavaScript, without external libraries (no jQuery), with a strong focus on performance, accessibility (a11y), and SEO.
 
+🚀 Live Demo: <a href="https://test.dooble.io/share/index" target="_blank">Check out the demo here</a>
+
 ## ✨ Key Features & Benefits
 
 - **Vanilla JS (No jQuery):** Lightweight, fast load times, and modern code using `addEventListener`.

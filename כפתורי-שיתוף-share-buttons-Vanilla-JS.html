@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="he-IL" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>ספריית כפתורי שיתוף</title>
+    
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-markup-templating.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-css.min.js"></script>
+
+    <style>
+       /* =========================================
+           עיצוב לוח הבקרה - סגנון עורך קוד מודרני (Dark Theme)
+           ========================================= */
+        body { 
+            font-family: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
+            background: #f1f5f9; 
+            margin: 0; 
+            padding: 50px 20px; 
+            color: #1e293b; 
+        }
+        
+        .header { text-align: center; margin-bottom: 50px; }
+        .header h1 { margin: 0; font-size: 2.5rem; color: #0f172a; letter-spacing: -0.5px; }
+        
+        .container { max-width: 1200px; margin: 0 auto; display: grid; gap: 40px; }
+        
+        .card { 
+            background: #fff; 
+            border-radius: 16px; 
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05); 
+            border: 1px solid #e2e8f0;
+            overflow: hidden; 
+            display: flex; 
+            flex-direction: column; 
+            transition: all 0.3s ease;
+        }
+        
+        /* אזור עליון - כותרת ותצוגה מקדימה */
+        .card-header { 
+            padding: 24px 32px; 
+            background: #ffffff; 
+            border-bottom: 1px dashed #cbd5e1; 
+            display: flex; 
+            align-items: center; 
+            gap: 20px; 
+        }
+        
+        .card-header h3 { margin: 0; font-size: 22px; color: #334155; font-weight: 600; }
+        .card-header .icon-preview { display: flex; align-items: center; gap: 15px; }
+        
+        /* העיצוב הכללי של הכפתורים בתוך התצוגה המקדימה */
+        .card-header button, .card-header a { 
+			gap: 10px;
+            margin: 0; padding: 0; background: none; border: none; cursor: pointer; text-decoration: none; 
+            display: inline-flex; align-items: center; justify-content: center; 
+            transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .card-header .icon-preview svg { width: 44px; height: 44px; display: block; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1)); }
+        .card-header .icon-preview a.text-link { color: #2563eb; font-weight: bold; font-size: 16px; text-decoration: none; font-family: arial;}
+        .card-header .icon-preview a.text-link:hover { text-decoration: underline; color: #1d4ed8; }
+        
+        /* אזור הקוד למטה - מפוצל למקטעים */
+        .card-code { 
+            background: #ffffff; 
+            padding: 24px 32px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .code-block-wrapper {
+            position: relative;
+        }
+
+        .code-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .code-title {
+            font-size: 14px;
+            font-weight: bold;
+            color: #475569;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .card-code pre { 
+            margin: 0; 
+            white-space: pre-wrap; 
+            word-wrap: break-word; 
+            font-family: 'Fira Code', 'Courier New', Courier, monospace; 
+            font-size: 14px; 
+            direction: ltr; 
+            text-align: left; 
+            line-height: 1.6;
+            max-height: 250px;
+            overflow-y: auto;
+            color: #e2e8f0 !important;
+            border: 1px solid #ced0d3; 
+            padding: 20px;
+            border-radius: 12px;
+            background: #0f172a !important; /* דריסת Prism */
+        }
+		code[class*=language-], pre[class*=language-] {
+			color: #fff;
+			text-shadow: none;
+		}
+		.language-css .token.string, .style .token.string, .token.entity, .token.operator, .token.url {
+			background: none;
+		}
+        
+        /* כפתור העתקה מרחף צמוד בלוק */
+        .copy-btn { 
+            background: #e2e8f0;
+            color: #0f172a; 
+            border: 1px solid #cbd5e1; 
+            padding: 6px 16px; 
+            border-radius: 8px; 
+            cursor: pointer; 
+            font-weight: 600; 
+            font-size: 12px; 
+            transition: all 0.2s ease; 
+        }
+        .copy-btn:hover { background: #cbd5e1; }
+        .copy-btn.copied { 
+            background: #10b981; 
+            border-color: #10b981;
+            color: #fff;
+        }
+
+        /* עיצוב גלילה */
+        pre::-webkit-scrollbar { width: 8px; }
+        pre::-webkit-scrollbar-track { background: #1e293b; border-radius: 8px;}
+        pre::-webkit-scrollbar-thumb { background: #475569; border-radius: 8px; }
+        pre::-webkit-scrollbar-thumb:hover { background: #64748b; }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>ספריית כפתורי שיתוף</h1>
+    </div>
+
+    <div class="container" id="components-list"></div>
+
+    <script>
+        const components = [
+            {
+                title: 'פייסבוק (Facebook)',
+                icon: `<button><svg viewBox="0 0 35 35" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="17.5" cy="17.5" r="14.875" fill="white"></circle><g clip-path="url(#clip0_1_2253)"><path d="M1.7002 17.5C1.7002 8.77374 8.77398 1.69995 17.5002 1.69995C26.2264 1.69995 33.3002 8.77374 33.3002 17.5C33.3002 26.2262 26.2264 33.3 17.5002 33.3C8.77398 33.3 1.7002 26.2262 1.7002 17.5Z" stroke="#3b5998" stroke-width="2"></path></g><circle cx="17.5" cy="17.5" r="14.875" fill="white"></circle><path d="M21.4797 12.3095H18.9544C18.6552 12.3095 18.3227 12.7032 18.3227 13.2265V15.05H21.4814L21.0037 17.6505H18.3227V25.4572H15.3424V17.6505H12.6387V15.05H15.3424V13.5205C15.3424 11.326 16.8649 9.54272 18.9544 9.54272H21.4797V12.3095Z" fill="#3b5998"></path><defs><clipPath id="clip0_1_2253"><rect width="35" height="35" fill="white"></rect></clipPath></defs></svg></button>`,
+                html: `<button type="button" class="facebook-share-btn" data-url="" aria-label="שיתוף הדף בפייסבוק" title="שיתוף הדף בפייסבוק">
+    <svg width="40" height="40" viewBox="0 0 35 35" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="17.5" cy="17.5" r="14.875" fill="white"></circle><g clip-path="url(#clip0_1_2253)"><path d="M1.7002 17.5C1.7002 8.77374 8.77398 1.69995 17.5002 1.69995C26.2264 1.69995 33.3002 8.77374 33.3002 17.5C33.3002 26.2262 26.2264 33.3 17.5002 33.3C8.77398 33.3 1.7002 26.2262 1.7002 17.5Z" stroke="#3b5998" stroke-width="2"></path></g><circle cx="17.5" cy="17.5" r="14.875" fill="white"></circle><path d="M21.4797 12.3095H18.9544C18.6552 12.3095 18.3227 12.7032 18.3227 13.2265V15.05H21.4814L21.0037 17.6505H18.3227V25.4572H15.3424V17.6505H12.6387V15.05H15.3424V13.5205C15.3424 11.326 16.8649 9.54272 18.9544 9.54272H21.4797V12.3095Z" fill="#3b5998"></path><defs><clipPath id="clip0_1_2253"><rect width="35" height="35" fill="white"></rect></clipPath></defs></svg>
+</button>`,
+                js: `document.querySelectorAll('.facebook-share-btn').forEach(function(btn) {
+    btn.addEventListener('click', function(e) {
+        e.preventDefault();
+        var url = this.getAttribute('data-url') || window.location.href;
+        window.open('https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(url), '', 'width=900,height=300');
+    });
+});`
+            },
+            {
+                title: 'טוויטר / רשת X',
+                icon: `<button><svg viewBox="0 0 1668.56 1221.19" xmlns="http://www.w3.org/2000/svg"><g><path d="M834.28,1105.93c-66.86,0-131.73-13.1-192.81-38.93c-58.99-24.95-111.96-60.66-157.44-106.15s-81.2-98.46-106.15-157.44c-25.83-61.08-38.93-125.95-38.93-192.81s13.1-131.73,38.93-192.81c24.95-58.99,60.66-111.96,106.15-157.44c45.49-45.49,98.46-81.2,157.44-106.15c61.08-25.83,125.95-38.93,192.81-38.93s131.73,13.1,192.81,38.93c58.99,24.95,111.96,60.66,157.44,106.15c45.49,45.49,81.2,98.46,106.15,157.44c25.83,61.08,38.93,125.95,38.93,192.81s-13.1,131.73-38.93,192.81c-24.95,58.99-60.66,111.96-106.15,157.44s-98.46,81.2-157.44,106.15C966.01,1092.83,901.14,1105.93,834.28,1105.93z M834.28,143.26c-257.69,0-467.33,209.64-467.33,467.33s209.64,467.33,467.33,467.33s467.33-209.65,467.33-467.33S1091.97,143.26,834.28,143.26z"/></g><g transform="translate(52.390088,-25.058597)"><path fill="#1D1D1B" d="M485.39,356.79l230.07,307.62L483.94,914.52h52.11l202.7-218.98l163.77,218.98h177.32L836.82,589.6l215.5-232.81h-52.11L813.54,558.46L662.71,356.79H485.39z M562.02,395.17h81.46l359.72,480.97h-81.46L562.02,395.17z"/></g></svg></button>`,
+                html: `<button type="button" class="twitter-share-btn" data-url="" aria-label="שיתוף הדף ברשת X" title="שיתוף הדף ברשת X">
+    <svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="0 0 1668.56 1221.19"><g><path d="M834.28,1105.93c-66.86,0-131.73-13.1-192.81-38.93c-58.99-24.95-111.96-60.66-157.44-106.15s-81.2-98.46-106.15-157.44c-25.83-61.08-38.93-125.95-38.93-192.81s13.1-131.73,38.93-192.81c24.95-58.99,60.66-111.96,106.15-157.44c45.49-45.49,98.46-81.2,157.44-106.15c61.08-25.83,125.95-38.93,192.81-38.93s131.73,13.1,192.81,38.93c58.99,24.95,111.96,60.66,157.44,106.15c45.49,45.49,81.2,98.46,106.15,157.44c25.83,61.08,38.93,125.95,38.93,192.81s-13.1,131.73-38.93,192.81c-24.95,58.99-60.66,111.96-106.15,157.44s-98.46,81.2-157.44,106.15C966.01,1092.83,901.14,1105.93,834.28,1105.93z M834.28,143.26c-257.69,0-467.33,209.64-467.33,467.33s209.64,467.33,467.33,467.33s467.33-209.65,467.33-467.33S1091.97,143.26,834.28,143.26z"/></g><g transform="translate(52.390088,-25.058597)"><path fill="#1D1D1B" d="M485.39,356.79l230.07,307.62L483.94,914.52h52.11l202.7-218.98l163.77,218.98h177.32L836.82,589.6l215.5-232.81h-52.11L813.54,558.46L662.71,356.79H485.39z M562.02,395.17h81.46l359.72,480.97h-81.46L562.02,395.17z"/></g></svg>
+</button>`,
+                js: `document.querySelectorAll('.twitter-share-btn').forEach(function(btn) {
+    btn.addEventListener('click', function(e) {
+        e.preventDefault();
+        var url = this.getAttribute('data-url') || window.location.href;
+        window.open('https://x.com/share?url=' + encodeURIComponent(url), '', 'width=700,height=400');
+    });
+});`
+            },
+            {
+                title: 'פינטרסט (Pinterest)',
+                icon: `<button><svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><g><path d="M511.999,256.002c0,141.373 -114.606,255.979 -255.98,255.979c-141.373,0 -255.979,-114.606 -255.979,-255.979c0,-141.374 114.606,-255.98 255.979,-255.98c141.374,0 255.98,114.606 255.98,255.98Z" style="fill:#fff;"/><path d="M255.998,0.001c-141.384,0 -255.998,114.617 -255.998,255.998c0,108.456 67.475,201.171 162.707,238.471c-2.24,-20.255 -4.261,-51.405 0.889,-73.518c4.65,-19.978 30.018,-127.248 30.018,-127.248c0,0 -7.659,-15.334 -7.659,-38.008c0,-35.596 20.632,-62.171 46.323,-62.171c21.839,0 32.391,16.399 32.391,36.061c0,21.966 -13.984,54.803 -21.203,85.235c-6.03,25.482 12.779,46.261 37.909,46.261c45.503,0 80.477,-47.976 80.477,-117.229c0,-61.293 -44.045,-104.149 -106.932,-104.149c-72.841,0 -115.597,54.634 -115.597,111.095c0,22.004 8.475,45.596 19.052,58.421c2.09,2.535 2.398,4.758 1.776,7.343c-1.945,8.087 -6.262,25.474 -7.111,29.032c-1.117,4.686 -3.711,5.681 -8.561,3.424c-31.974,-14.884 -51.963,-61.627 -51.963,-99.174c0,-80.755 58.672,-154.915 169.148,-154.915c88.806,0 157.821,63.279 157.821,147.85c0,88.229 -55.629,159.232 -132.842,159.232c-25.94,0 -50.328,-13.476 -58.674,-29.394c0,0 -12.838,48.878 -15.95,60.856c-5.782,22.237 -21.382,50.109 -31.818,67.11c23.955,7.417 49.409,11.416 75.797,11.416c141.389,0 256.003,-114.612 256.003,-256.001c0,-141.381 -114.614,-255.998 -256.003,-255.998Z" style="fill:#e71d27;fill-rule:nonzero;"/></g></svg></button>`,
+                html: `<button type="button" class="pinterest-share-btn" data-url="" data-img="@{shareImg}@" data-description="@{metaDescription}@" aria-label="שיתוף הדף בפינטרס" title="שיתוף הדף בפינטרס">
+    <svg height="40" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;" version="1.1" viewBox="0 0 512 512" width="100%" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:serif="http://www.serif.com/" xmlns:xlink="http://www.w3.org/1999/xlink"><g><path d="M511.999,256.002c0,141.373 -114.606,255.979 -255.98,255.979c-141.373,0 -255.979,-114.606 -255.979,-255.979c0,-141.374 114.606,-255.98 255.979,-255.98c141.374,0 255.98,114.606 255.98,255.98Z" style="fill:#fff;fill-rule:nonzero;"/><path d="M255.998,0.001c-141.384,0 -255.998,114.617 -255.998,255.998c0,108.456 67.475,201.171 162.707,238.471c-2.24,-20.255 -4.261,-51.405 0.889,-73.518c4.65,-19.978 30.018,-127.248 30.018,-127.248c0,0 -7.659,-15.334 -7.659,-38.008c0,-35.596 20.632,-62.171 46.323,-62.171c21.839,0 32.391,16.399 32.391,36.061c0,21.966 -13.984,54.803 -21.203,85.235c-6.03,25.482 12.779,46.261 37.909,46.261c45.503,0 80.477,-47.976 80.477,-117.229c0,-61.293 -44.045,-104.149 -106.932,-104.149c-72.841,0 -115.597,54.634 -115.597,111.095c0,22.004 8.475,45.596 19.052,58.421c2.09,2.535 2.398,4.758 1.776,7.343c-1.945,8.087 -6.262,25.474 -7.111,29.032c-1.117,4.686 -3.711,5.681 -8.561,3.424c-31.974,-14.884 -51.963,-61.627 -51.963,-99.174c0,-80.755 58.672,-154.915 169.148,-154.915c88.806,0 157.821,63.279 157.821,147.85c0,88.229 -55.629,159.232 -132.842,159.232c-25.94,0 -50.328,-13.476 -58.674,-29.394c0,0 -12.838,48.878 -15.95,60.856c-5.782,22.237 -21.382,50.109 -31.818,67.11c23.955,7.417 49.409,11.416 75.797,11.416c141.389,0 256.003,-114.612 256.003,-256.001c0,-141.381 -114.614,-255.998 -256.003,-255.998Z" style="fill:#e71d27;fill-rule:nonzero;"/></g></svg>
+</button>`,
+                js: `document.querySelectorAll('.pinterest-share-btn').forEach(function(btn) {
+    btn.addEventListener('click', function(e) {
+        e.preventDefault();
+        var url = this.getAttribute('data-url') || window.location.href;
+        var img = this.getAttribute('data-img') || '';
+        var desc = this.getAttribute('data-description') || '';
+        window.open('http://pinterest.com/pin/create/button/?url=' + encodeURIComponent(url) + '&media=' + encodeURIComponent(img) + '&description=' + encodeURIComponent(desc), '', 'width=750,height=530');
+    });
+});`
+            },
+            {
+                title: 'וואטסאפ - כפתור עם טקסט שיתוף',
+                icon: `<svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="15.9984" cy="15.9999" r="13.6" fill="white"></circle><path d="M1.42966 30.5748L3.13355 24.3138L3.24361 23.9093L3.03242 23.5473C1.69654 21.2573 0.994689 18.6528 0.999045 16.0016V16C0.999045 7.71548 7.71453 1 15.999 1C24.2835 1 30.999 7.71548 30.999 16C30.999 24.2845 24.2835 31 15.999 31L15.9974 31C13.3474 31.0043 10.744 30.303 8.45475 28.9681L8.09243 28.7568L7.68781 28.8673L1.42966 30.5748Z" stroke="#189D0E" stroke-width="2"></path><path d="M10.2245 8.4927C10.0179 8.50553 9.81601 8.55995 9.63094 8.6527C9.45737 8.75099 9.29893 8.87386 9.16053 9.0175C8.96853 9.1983 8.85973 9.3551 8.74293 9.5071C8.15159 10.2767 7.83351 11.2214 7.83894 12.1919C7.84214 12.9759 8.04694 13.7391 8.36694 14.4527C9.02133 15.8959 10.0981 17.4239 11.5205 18.8399C11.8629 19.1807 12.1973 19.5231 12.5573 19.8415C14.3228 21.3958 16.4265 22.5168 18.7013 23.1151L19.6117 23.2543C19.9077 23.2703 20.2037 23.2479 20.5013 23.2335C20.9673 23.2094 21.4223 23.0833 21.8341 22.8639C22.0437 22.756 22.2481 22.6385 22.4469 22.5119C22.4469 22.5119 22.5157 22.4671 22.6469 22.3679C22.8629 22.2079 22.9957 22.0943 23.1749 21.9071C23.3077 21.7695 23.4229 21.6079 23.5109 21.4239C23.6357 21.1631 23.7605 20.6655 23.8117 20.2511C23.8501 19.9343 23.8389 19.7615 23.8341 19.6543C23.8277 19.4831 23.6853 19.3055 23.5301 19.2303L22.5989 18.8127C22.5989 18.8127 21.2069 18.2063 20.3573 17.8191C20.2677 17.78 20.1718 17.7578 20.0741 17.7535C19.9647 17.7423 19.854 17.7546 19.7497 17.7896C19.6454 17.8247 19.5498 17.8816 19.4693 17.9567V17.9535C19.4613 17.9535 19.3541 18.0447 18.1973 19.4463C18.1309 19.5355 18.0395 19.6029 17.9346 19.64C17.8298 19.677 17.7162 19.682 17.6085 19.6543C17.5043 19.6264 17.4022 19.5911 17.3029 19.5487C17.1045 19.4655 17.0357 19.4335 16.8997 19.3743L16.8917 19.3711C15.9764 18.9715 15.1289 18.4316 14.3797 17.7711C14.1781 17.5951 13.9909 17.4031 13.7989 17.2175C13.1695 16.6147 12.6209 15.9327 12.1669 15.1887L12.0725 15.0367C12.0047 14.9346 11.9499 14.8244 11.9093 14.7087C11.8485 14.4735 12.0069 14.2847 12.0069 14.2847C12.0069 14.2847 12.3957 13.8591 12.5765 13.6287C12.7271 13.4372 12.8675 13.238 12.9973 13.0319C13.1861 12.7279 13.2453 12.4159 13.1461 12.1743C12.6981 11.0799 12.2341 9.9903 11.7573 8.9087C11.6629 8.6943 11.3829 8.5407 11.1285 8.5103C11.0421 8.5007 10.9557 8.4911 10.8693 8.4847C10.6545 8.47402 10.4391 8.47616 10.2245 8.4911V8.4927Z" fill="#189D0E"></path></svg> <span>שיתוף בוואטסאפ</span>`,
+                html: `<a href="#" class="whatsapp-share-btn" data-url="" rel="nofollow noopener noreferrer" target="_blank" style="display:inline-flex; align-items:center; gap:8px; text-decoration:none; color:#189D0E; font-family:arial;" aria-label="שיתוף הדף בוואטסאפ" title="שיתוף הדף בוואטסאפ">
+    <svg aria-hidden="true" focusable="false" width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="15.9984" cy="15.9999" r="13.6" fill="white"></circle><path d="M1.42966 30.5748L3.13355 24.3138L3.24361 23.9093L3.03242 23.5473C1.69654 21.2573 0.994689 18.6528 0.999045 16.0016V16C0.999045 7.71548 7.71453 1 15.999 1C24.2835 1 30.999 7.71548 30.999 16C30.999 24.2845 24.2835 31 15.999 31L15.9974 31C13.3474 31.0043 10.744 30.303 8.45475 28.9681L8.09243 28.7568L7.68781 28.8673L1.42966 30.5748Z" stroke="#189D0E" stroke-width="2"></path><path d="M10.2245 8.4927C10.0179 8.50553 9.81601 8.55995 9.63094 8.6527C9.45737 8.75099 9.29893 8.87386 9.16053 9.0175C8.96853 9.1983 8.85973 9.3551 8.74293 9.5071C8.15159 10.2767 7.83351 11.2214 7.83894 12.1919C7.84214 12.9759 8.04694 13.7391 8.36694 14.4527C9.02133 15.8959 10.0981 17.4239 11.5205 18.8399C11.8629 19.1807 12.1973 19.5231 12.5573 19.8415C14.3228 21.3958 16.4265 22.5168 18.7013 23.1151L19.6117 23.2543C19.9077 23.2703 20.2037 23.2479 20.5013 23.2335C20.9673 23.2094 21.4223 23.0833 21.8341 22.8639C22.0437 22.756 22.2481 22.6385 22.4469 22.5119C22.4469 22.5119 22.5157 22.4671 22.6469 22.3679C22.8629 22.2079 22.9957 22.0943 23.1749 21.9071C23.3077 21.7695 23.4229 21.6079 23.5109 21.4239C23.6357 21.1631 23.7605 20.6655 23.8117 20.2511C23.8501 19.9343 23.8389 19.7615 23.8341 19.6543C23.8277 19.4831 23.6853 19.3055 23.5301 19.2303L22.5989 18.8127C22.5989 18.8127 21.2069 18.2063 20.3573 17.8191C20.2677 17.78 20.1718 17.7578 20.0741 17.7535C19.9647 17.7423 19.854 17.7546 19.7497 17.7896C19.6454 17.8247 19.5498 17.8816 19.4693 17.9567V17.9535C19.4613 17.9535 19.3541 18.0447 18.1973 19.4463C18.1309 19.5355 18.0395 19.6029 17.9346 19.64C17.8298 19.677 17.7162 19.682 17.6085 19.6543C17.5043 19.6264 17.4022 19.5911 17.3029 19.5487C17.1045 19.4655 17.0357 19.4335 16.8997 19.3743L16.8917 19.3711C15.9764 18.9715 15.1289 18.4316 14.3797 17.7711C14.1781 17.5951 13.9909 17.4031 13.7989 17.2175C13.1695 16.6147 12.6209 15.9327 12.1669 15.1887L12.0725 15.0367C12.0047 14.9346 11.9499 14.8244 11.9093 14.7087C11.8485 14.4735 12.0069 14.2847 12.0069 14.2847C12.0069 14.2847 12.3957 13.8591 12.5765 13.6287C12.7271 13.4372 12.8675 13.238 12.9973 13.0319C13.1861 12.7279 13.2453 12.4159 13.1461 12.1743C12.6981 11.0799 12.2341 9.9903 11.7573 8.9087C11.6629 8.6943 11.3829 8.5407 11.1285 8.5103C11.0421 8.5007 10.9557 8.4911 10.8693 8.4847C10.6545 8.47402 10.4391 8.47616 10.2245 8.4911V8.4927Z" fill="#189D0E"></path></svg>
+    <span>שיתוף בוואטסאפ</span>
+</a>`,
+                js: `document.querySelectorAll('.whatsapp-share-btn').forEach(function(btn) {
+    btn.addEventListener('click', function(e) {
+        e.preventDefault();
+        var url = this.getAttribute('data-url') || window.location.href;
+        window.open('https://api.whatsapp.com/send?text=' + encodeURIComponent(url), '_blank');
+    });
+});`
+            },
+            {
+                title: 'וואטסאפ - שליחת הודעה ישירה (ללא אייקון)',
+                icon: `<a class="text-link" href="#">לחצו כאן לשליחת הודעה בוואטסאפ</a>`,
+                html: `<a href="https://wa.me/972547110400" rel="nofollow noopener noreferrer" target="_blank">לחצו כאן לשליחת הודעה בוואטסאפ</a>
+
+<a href="https://api.whatsapp.com/send?phone=972547110400&text=בדיקה" rel="nofollow noopener noreferrer" target="_blank">לחצו כאן לשליחת הודעה בוואטסאפ</a>`,
+                js: null // No JS needed for hardcoded links
+            },
+            {
+                title: 'HOUZZ',
+                icon: `<button><svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><circle cx="256" cy="256" fill="#4DBC15" r="256"/><polygon fill="#FFFFFF" points="380.9,236.3 380.9,396 288.6,396 288.6,301.1 221.8,301.1 221.8,396 131.1,396 131.1,116   195.8,116 195.8,183.5 "/></svg></button>`,
+                html: `<button type="button" class="houzz-share-btn" data-url="" data-img="@{mainDomain}@[[image3]]" data-name="@{pageName}@" aria-label="שיתוף הדף ב-Houzz" title="שיתוף הדף ב-Houzz">
+    <svg height="40" enable-background="new 0 0 512 512" version="1.1" viewBox="0 0 512 512" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><circle cx="256" cy="256" fill="#4DBC15" id="ellipse" r="256"/><polygon fill="#FFFFFF" id="logo" points="380.9,236.3 380.9,396 288.6,396 288.6,301.1 221.8,301.1 221.8,396 131.1,396 131.1,116   195.8,116 195.8,183.5 "/></svg>
+</button>`,
+                js: `document.querySelectorAll('.houzz-share-btn').forEach(function(btn) {
+    btn.addEventListener('click', function(e) {
+        e.preventDefault();
+        var url = this.getAttribute('data-url') || window.location.href;
+        var img = this.getAttribute('data-img') || '';
+        var title = this.getAttribute('data-name') || '';
+        window.open('http://www.houzz.com/imageClipperUpload?imageUrl=' + encodeURIComponent(img) + '&title=' + encodeURIComponent(title) + '&link=' + encodeURIComponent(url), '', 'width=900,height=400');
+    });
+});`
+            },
+            {
+                title: 'לינקדאין (LinkedIn)',
+                icon: `<button><svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><g><circle clip-rule="evenodd" cx="16" cy="16" fill="#007BB5" fill-rule="evenodd" r="16"/><g><rect fill="#FFFFFF" height="14" width="4" x="7" y="11"/><path d="M20.499,11c-2.791,0-3.271,1.018-3.499,2v-2h-4v14h4v-8c0-1.297,0.703-2,2-2c1.266,0,2,0.688,2,2v8h4v-7    C25,14,24.479,11,20.499,11z" fill="#FFFFFF"/><circle cx="9" cy="8" fill="#FFFFFF" r="2"/></g></g></svg></button>`,
+                html: `<button type="button" class="linkedin-share-btn" data-url="" data-title="כותרת הדף" data-source="שם האתר" aria-label="שיתוף הדף בלינקדאין" title="שיתוף הדף בלינקדאין">
+    <svg enable-background="new 0 0 32 32" height="40" version="1.0" viewBox="0 0 32 32" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><g><circle clip-rule="evenodd" cx="16" cy="16" fill="#007BB5" fill-rule="evenodd" r="16"/><g><rect fill="#FFFFFF" height="14" width="4" x="7" y="11"/><path d="M20.499,11c-2.791,0-3.271,1.018-3.499,2v-2h-4v14h4v-8c0-1.297,0.703-2,2-2c1.266,0,2,0.688,2,2v8h4v-7    C25,14,24.479,11,20.499,11z" fill="#FFFFFF"/><circle cx="9" cy="8" fill="#FFFFFF" r="2"/></g></g></svg>
+</button>`,
+                js: `document.querySelectorAll('.linkedin-share-btn').forEach(function(btn) {
+    btn.addEventListener('click', function(e) {
+        e.preventDefault();
+        var url = this.getAttribute('data-url') || window.location.href;
+        var title = this.getAttribute('data-title') || document.title;
+        var source = this.getAttribute('data-source') || window.location.hostname;
+        window.open('https://www.linkedin.com/shareArticle?mini=true&url=' + encodeURIComponent(url) + '&title=' + encodeURIComponent(title) + '&source=' + encodeURIComponent(source), '', 'width=750,height=530');
+    });
+});`
+            },
+            {
+                title: 'אימייל (Email)',
+                icon: `<a><svg viewBox="0 0 35 35" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="17.3161" cy="17.3178" r="15.4948" fill="white"></circle><path d="M0.999023 17.5C0.999023 8.38718 8.3862 1 17.499 1C26.6118 1 33.999 8.38718 33.999 17.5C33.999 26.6128 26.6118 34 17.499 34C8.3862 34 0.999023 26.6128 0.999023 17.5Z" stroke="#140A61" stroke-width="2"></path><path d="M24.4867 10.5C24.9785 10.5 25.3952 10.6706 25.7367 11.0117C26.0783 11.3528 26.249 11.769 26.249 12.2602V22.7398C26.249 23.231 26.0783 23.6472 25.7367 23.9883C25.3952 24.3294 24.9785 24.5 24.4867 24.5H10.5113C10.0195 24.5 9.60285 24.3294 9.26132 23.9883C8.91979 23.6472 8.74902 23.231 8.74902 22.7398V12.2602C8.74902 11.769 8.91979 11.3528 9.26132 11.0117C9.60285 10.6706 10.0195 10.5 10.5113 10.5H24.4867ZM24.4867 14.0205V12.2602L17.4785 16.6404L10.5113 12.2602V14.0205L17.4785 18.3596L24.4867 14.0205Z" fill="#140A61"></path></svg> <span style="font-family:arial; color:#140A61;">שיתוף באימייל</span></a>`,
+                html: `<a href="#" class="email-share-btn" data-url="" rel="nofollow noopener noreferrer" target="_blank" aria-label="שיתוף הדף באימייל" title="שיתוף הדף באימייל" style="display:inline-flex; align-items:center; gap:8px; text-decoration:none; color:#140A61; font-family:arial;">
+    <svg height="40" viewBox="0 0 35 35" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="17.3161" cy="17.3178" r="15.4948" fill="white"></circle><path d="M0.999023 17.5C0.999023 8.38718 8.3862 1 17.499 1C26.6118 1 33.999 8.38718 33.999 17.5C33.999 26.6128 26.6118 34 17.499 34C8.3862 34 0.999023 26.6128 0.999023 17.5Z" stroke="#140A61" stroke-width="2"></path><path d="M24.4867 10.5C24.9785 10.5 25.3952 10.6706 25.7367 11.0117C26.0783 11.3528 26.249 11.769 26.249 12.2602V22.7398C26.249 23.231 26.0783 23.6472 25.7367 23.9883C25.3952 24.3294 24.9785 24.5 24.4867 24.5H10.5113C10.0195 24.5 9.60285 24.3294 9.26132 23.9883C8.91979 23.6472 8.74902 23.231 8.74902 22.7398V12.2602C8.74902 11.769 8.91979 11.3528 9.26132 11.0117C9.60285 10.6706 10.0195 10.5 10.5113 10.5H24.4867ZM24.4867 14.0205V12.2602L17.4785 16.6404L10.5113 12.2602V14.0205L17.4785 18.3596L24.4867 14.0205Z" fill="#140A61"></path></svg>
+    שיתוף באימייל
+</a>`,
+                js: `document.querySelectorAll('.email-share-btn').forEach(function(btn) {
+    btn.addEventListener('click', function(e) {
+        e.preventDefault();
+        var url = this.getAttribute('data-url') || window.location.href;
+        window.location.href = 'mailto:?subject=' + encodeURIComponent('אני רוצה לשתף איתך קישור') + '&body=' + encodeURIComponent(url);
+    });
+});`
+            },
+            {
+                title: 'טלגרם (Telegram)',
+                icon: `<a><svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><path d="M256,0C114.615,0,0,114.615,0,256S114.615,512,256,512,512,397.385,512,256,397.385,0,256,0ZM389.059,161.936,343.591,379a16.007,16.007,0,0,1-25.177,9.593l-66.136-48.861-40.068,37.8a5.429,5.429,0,0,1-7.74-.294l-.861-.946,6.962-67.375L336.055,194.266a3.358,3.358,0,0,0-4.061-5.317L171.515,290.519,102.4,267.307a9.393,9.393,0,0,1-.32-17.694L372.5,147.744A12.441,12.441,0,0,1,389.059,161.936Z" fill="#2F9DDF" /></svg></a>`,
+                html: `<a href="#" class="telegram-share-btn" data-url="" rel="nofollow noopener noreferrer" target="_blank" title="לחצו כאן לשיתוף הדף בטלגרם">
+    <svg height="40" data-name="Layer 1" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><path d="M256,0C114.615,0,0,114.615,0,256S114.615,512,256,512,512,397.385,512,256,397.385,0,256,0ZM389.059,161.936,343.591,379a16.007,16.007,0,0,1-25.177,9.593l-66.136-48.861-40.068,37.8a5.429,5.429,0,0,1-7.74-.294l-.861-.946,6.962-67.375L336.055,194.266a3.358,3.358,0,0,0-4.061-5.317L171.515,290.519,102.4,267.307a9.393,9.393,0,0,1-.32-17.694L372.5,147.744A12.441,12.441,0,0,1,389.059,161.936Z" fill="#2F9DDF" /></svg>
+</a>`,
+                js: `document.querySelectorAll('.telegram-share-btn').forEach(function(btn) {
+    btn.addEventListener('click', function(e) {
+        e.preventDefault();
+        var url = this.getAttribute('data-url') || window.location.href;
+        window.open('https://t.me/share/url?url=' + encodeURIComponent(url) + '&text=' + encodeURIComponent('אני רוצה לשתף איתך קישור'), '_blank');
+    });
+});`
+            },
+            {
+                title: 'הדפסה (Print)',
+                icon: `<button><svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect height="8" width="12" x="6" y="14"/></svg></button>`,
+                html: `<button type="button" class="print-share-btn" aria-label="הדפסת הדף" title="הדפסת הדף" style="background:none; border:none; cursor:pointer;">
+    <svg class="feather feather-printer" fill="none" height="40" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect height="8" width="12" x="6" y="14"/></svg>
+</button>`,
+                js: `document.querySelectorAll('.print-share-btn').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+        window.print();
+    });
+});`
+            },
+            {
+                title: 'מסנג\'ר של פייסבוק',
+                icon: `<a><svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><g><path d="M256,0.003c-144.225,0 -256,105.645 -256,248.326c0,74.636 30.596,139.126 80.406,183.681c4.172,3.76 6.696,8.963 6.902,14.577l1.391,45.534c0.463,14.526 15.452,23.952 28.742,18.131l50.788,-22.406c4.326,-1.906 9.117,-2.266 13.65,-1.03c23.333,6.438 48.212,9.838 74.121,9.838c144.226,0 256,-105.645 256,-248.325c0,-142.681 -111.774,-248.326 -256,-248.326Z" style="fill:url(#_Linear1);"/><path d="M102.297,320.956l75.203,-119.295c11.95,-18.955 37.602,-23.694 55.527,-10.25l59.802,44.864c5.512,4.121 13.032,4.07 18.492,-0.051l80.766,-61.296c10.766,-8.19 24.879,4.739 17.616,16.174l-75.151,119.244c-11.951,18.955 -37.602,23.694 -55.527,10.25l-59.802,-44.865c-5.512,-4.12 -13.032,-4.069 -18.492,0.052l-80.818,61.347c-10.765,8.19 -24.879,-4.739 -17.616,-16.174Z" style="fill:#fff;"/></g><defs><linearGradient gradientTransform="matrix(1.45038e-13,512,-512,1.45038e-13,256,0.0032465)" gradientUnits="userSpaceOnUse" id="_Linear1" x1="0" x2="1" y1="0" y2="0"><stop offset="0" style="stop-color:#00b2ff;stop-opacity:1"/><stop offset="1" style="stop-color:#006aff;stop-opacity:1"/></linearGradient></defs></svg></a>`,
+                html: `<a href="https://m.me/YOUR-FACEBOOK-PROFILE" target="_blank" rel="nofollow noopener noreferrer">
+    <svg height="40" version="1.1" viewBox="0 0 512 512" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:serif="http://www.serif.com/" xmlns:xlink="http://www.w3.org/1999/xlink"><g id="Messenger_4_"><path d="M256,0.003c-144.225,0 -256,105.645 -256,248.326c0,74.636 30.596,139.126 80.406,183.681c4.172,3.76 6.696,8.963 6.902,14.577l1.391,45.534c0.463,14.526 15.452,23.952 28.742,18.131l50.788,-22.406c4.326,-1.906 9.117,-2.266 13.65,-1.03c23.333,6.438 48.212,9.838 74.121,9.838c144.226,0 256,-105.645 256,-248.325c0,-142.681 -111.774,-248.326 -256,-248.326Z" id="Bubble_Solid_3_" style="fill:url(#_Linear1);"/><path d="M102.297,320.956l75.203,-119.295c11.95,-18.955 37.602,-23.694 55.527,-10.25l59.802,44.864c5.512,4.121 13.032,4.07 18.492,-0.051l80.766,-61.296c10.766,-8.19 24.879,4.739 17.616,16.174l-75.151,119.244c-11.951,18.955 -37.602,23.694 -55.527,10.25l-59.802,-44.865c-5.512,-4.12 -13.032,-4.069 -18.492,0.052l-80.818,61.347c-10.765,8.19 -24.879,-4.739 -17.616,-16.174Z" id="Bolt_4_" style="fill:#fff;"/></g><defs><linearGradient gradientTransform="matrix(1.45038e-13,512,-512,1.45038e-13,256,0.0032465)" gradientUnits="userSpaceOnUse" id="_Linear1" x1="0" x2="1" y1="0" y2="0"><stop offset="0" style="stop-color:#00b2ff;stop-opacity:1"/><stop offset="1" style="stop-color:#006aff;stop-opacity:1"/></linearGradient></defs></svg>
+</a>`,
+                js: null // No JS needed
+            },
+            {
+                title: 'Waze - קישור לווייז',
+                icon: `<a class="text-link" href="#">Waze Link</a>`,
+                html: `<a href="https://www.waze.com/ul?ll=32.79404630,34.98957100&navigate=yes" target="_blank" rel="nofollow noopener noreferrer">Waze Link</a>`,
+                js: null // No JS needed
+            },
+            {
+                title: 'העתקת קישור (HTML + CSS + JS)',
+                icon: `<button><svg viewBox="0 0 35 35" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="17.3161" cy="17.3178" r="15.4948" fill="white"/><path d="M0.999023 17.5C0.999023 8.38718 8.3862 1 17.499 1C26.6118 1 33.999 8.38718 33.999 17.5C33.999 26.6128 26.6118 34 17.499 34C8.3862 34 0.999023 26.6128 0.999023 17.5Z" stroke="#140A61" stroke-width="2"/><path d="M20.7133 12.6785H11.6062C10.7186 12.6785 9.99902 13.398 9.99902 14.2856V23.3928C9.99902 24.2804 10.7186 24.9999 11.6062 24.9999H20.7133C21.6009 24.9999 22.3205 24.2804 22.3205 23.3928V14.2856C22.3205 13.398 21.6009 12.6785 20.7133 12.6785Z" fill="#140A61"/><path d="M23.3916 10H13.7487C12.8659 9.99997 12.1484 10.712 12.1416 11.5948C12.1416 11.5991 12.1416 11.6028 12.1416 11.6071H20.713C22.1917 11.6089 23.3899 12.8071 23.3916 14.2857V22.8572C23.3959 22.8572 23.3996 22.8572 23.4039 22.8572C24.2867 22.8504 24.9988 22.1328 24.9988 21.25V11.6071C24.9988 10.7195 24.2792 10 23.3916 10Z" fill="#140A61"/></svg></button>`,
+                html: `<button type="button" class="copy-url-btn" data-url="" aria-label="לחצו כאן להעתקת הקישור של הדף" title="לחצו כאן להעתקת הקישור של הדף">
+    <svg aria-hidden="true" focusable="false" class="hide-on-check" viewBox="0 0 35 35" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="17.3161" cy="17.3178" r="15.4948" fill="white"/><path d="M0.999023 17.5C0.999023 8.38718 8.3862 1 17.499 1C26.6118 1 33.999 8.38718 33.999 17.5C33.999 26.6128 26.6118 34 17.499 34C8.3862 34 0.999023 26.6128 0.999023 17.5Z" stroke="#140A61" stroke-width="2"/><path d="M20.7133 12.6785H11.6062C10.7186 12.6785 9.99902 13.398 9.99902 14.2856V23.3928C9.99902 24.2804 10.7186 24.9999 11.6062 24.9999H20.7133C21.6009 24.9999 22.3205 24.2804 22.3205 23.3928V14.2856C22.3205 13.398 21.6009 12.6785 20.7133 12.6785Z" fill="#140A61"/><path d="M23.3916 10H13.7487C12.8659 9.99997 12.1484 10.712 12.1416 11.5948C12.1416 11.5991 12.1416 11.6028 12.1416 11.6071H20.713C22.1917 11.6089 23.3899 12.8071 23.3916 14.2857V22.8572C23.3959 22.8572 23.3996 22.8572 23.4039 22.8572C24.2867 22.8504 24.9988 22.1328 24.9988 21.25V11.6071C24.9988 10.7195 24.2792 10 23.3916 10Z" fill="#140A61"/></svg>
+    <svg aria-hidden="true" focusable="false" class="show-on-check" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><g><path d="M16,31A15,15,0,1,1,31,16,15,15,0,0,1,16,31ZM16,3A13,13,0,1,0,29,16,13,13,0,0,0,16,3Z" fill="#166354"/><path d="M13.67,22a1,1,0,0,1-.73-.32l-4.67-5a1,1,0,0,1,1.46-1.36l3.94,4.21,8.6-9.21a1,1,0,1,1,1.46,1.36l-9.33,10A1,1,0,0,1,13.67,22Z" fill="#166354"/></g></svg>
+    <div class="msg" role="status" aria-live="polite">הקישור הועתק</div>
+</button>`,
+                css: `.copy-url-btn {
+	position: relative;
+	background: none;
+	border: none;
+	cursor: pointer;
+	padding: 0;
+	display: inline-flex;
+	justify-content: center;
+	align-items: center;
+}
+.copy-url-btn svg {
+	width: 40px;
+	height: 40px;
+	display: block;
+}
+.copy-url-btn .show-on-check {
+	position: absolute;
+	left: 0;
+	top: 0;
+	transition: all 0.5s ease;
+	opacity: 0;
+	transform: scale(0.5);
+}
+.copy-url-btn .hide-on-check {
+	transition: all 0.5s ease;
+	opacity: 1;
+	transform: scale(1);
+}
+.copy-url-btn.active .show-on-check {
+	opacity: 1;
+	transform: scale(1);
+}
+.copy-url-btn.active .hide-on-check {
+	opacity: 0;
+	transform: scale(0.5);
+}
+.copy-url-btn .msg {
+	width: max-content;
+	font-size: 12px;
+	margin: 7px 0 0 0;
+	transform: translate(50%, -10px);
+	opacity: 0;
+	visibility: hidden;
+	position: absolute;
+	top: 100%;
+	right: 50%;
+	background: #333;
+	color: #fff;
+	padding: 4px 8px;
+	border-radius: 4px;
+	transition: all 0.5s ease;
+	pointer-events: none;
+}
+.copy-url-btn.active .msg {
+	opacity: 1;
+	visibility: visible;
+	transform: translate(50%, 0);
+}`,
+                js: `document.querySelectorAll('.copy-url-btn').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+        var urlToCopy = this.getAttribute('data-url');
+        if (!urlToCopy) {
+            urlToCopy = window.location.href;
+        }
+
+        var _this = this;
+
+        if (navigator.clipboard && window.isSecureContext) {
+            navigator.clipboard.writeText(urlToCopy).then(function() { showSuccess(_this); });
+        } else {
+            var textArea = document.createElement("textarea");
+            textArea.value = urlToCopy;
+            document.body.appendChild(textArea);
+            textArea.select();
+            try { document.execCommand('copy'); showSuccess(_this); } catch (e) {}
+            textArea.remove();
+        }
+    });
+
+    function showSuccess(button) {
+        button.classList.add('active');
+        setTimeout(function() { button.classList.remove('active'); }, 3000);
+    }
+});`
+            }
+        ];
+
+        const listContainer = document.getElementById('components-list');
+        
+        // פונקציית עזר ליצירת בלוק קוד (כדי למנוע כפילויות)
+        function createCodeBlock(title, codeString, languageClass, idSuffix) {
+            if (!codeString) return '';
+            
+            const escapedCode = codeString.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+            const elementId = `code-${idSuffix}`;
+            
+            return `
+                <div class="code-block-wrapper">
+                    <div class="code-header">
+                        <span class="code-title">${title}</span>
+                        <button class="copy-btn" onclick="copyTextFromElement('${elementId}', this)">העתק</button>
+                    </div>
+                    <pre><code id="${elementId}" class="${languageClass}">${escapedCode}</code></pre>
+                </div>
+            `;
+        }
+
+        // יצירת הכרטיסיות בדף
+        components.forEach((comp, index) => {
+            const card = document.createElement('div');
+            card.className = 'card';
+            
+            let codesHtml = '';
+            
+            // יצירת קופסאות הקוד (HTML / CSS / JS) במידה וקיימות
+            if (comp.html) codesHtml += createCodeBlock('HTML', comp.html, 'language-markup', `${index}-html`);
+            if (comp.css)  codesHtml += createCodeBlock('CSS', comp.css, 'language-css', `${index}-css`);
+            if (comp.js)   codesHtml += createCodeBlock('JavaScript', comp.js, 'language-javascript', `${index}-js`);
+
+            card.innerHTML = `
+                <div class="card-header">
+                    <div class="icon-preview">${comp.icon}</div>
+                    <h3>${comp.title}</h3>
+                </div>
+                <div class="card-code">
+                    ${codesHtml}
+                </div>
+            `;
+            listContainer.appendChild(card);
+        });
+
+        // פונקציית ההעתקה
+        window.copyTextFromElement = function(elementId, btnElement) {
+            const textToCopy = document.getElementById(elementId).innerText;
+            if (navigator.clipboard && window.isSecureContext) {
+                navigator.clipboard.writeText(textToCopy).then(() => handleBtnState(btnElement));
+            } else {
+                const textArea = document.createElement("textarea");
+                textArea.value = textToCopy;
+                document.body.appendChild(textArea);
+                textArea.select();
+                try { document.execCommand('copy'); handleBtnState(btnElement); } catch (e) {}
+                textArea.remove();
+            }
+        }
+
+        function handleBtnState(btn) {
+            const originalText = btn.innerText;
+            btn.innerText = 'הועתק!';
+            btn.classList.add('copied');
+            setTimeout(() => {
+                btn.innerText = originalText;
+                btn.classList.remove('copied');
+            }, 2000);
+        }
+    </script>
+</body>
+</html>

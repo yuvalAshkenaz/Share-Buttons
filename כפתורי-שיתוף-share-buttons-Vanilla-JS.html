@@ -11,9 +11,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-css.min.js"></script>
 
     <style>
-       /* =========================================
-           עיצוב לוח הבקרה - סגנון עורך קוד מודרני (Dark Theme)
-           ========================================= */
         body { 
             font-family: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
             background: #f1f5f9; 
@@ -157,7 +154,8 @@
                 html: `<button type="button" class="facebook-share-btn" data-url="" aria-label="Share on Facebook" title="Share on Facebook">
     Share on Facebook
 </button>`,
-                js: `document.querySelectorAll('.facebook-share-btn').forEach(function(btn) {
+                js: `// Facebook share
+document.querySelectorAll('.facebook-share-btn').forEach(function(btn) {
     btn.addEventListener('click', function(e) {
         e.preventDefault();
         var url = this.getAttribute('data-url') || window.location.href;
@@ -171,7 +169,8 @@
                 html: `<button type="button" class="twitter-share-btn" data-url="" aria-label="Share on X" title="Share on X">
     <svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="0 0 1668.56 1221.19"><g><path d="M834.28,1105.93c-66.86,0-131.73-13.1-192.81-38.93c-58.99-24.95-111.96-60.66-157.44-106.15s-81.2-98.46-106.15-157.44c-25.83-61.08-38.93-125.95-38.93-192.81s13.1-131.73,38.93-192.81c24.95-58.99,60.66-111.96,106.15-157.44c45.49-45.49,98.46-81.2,157.44-106.15c61.08-25.83,125.95-38.93,192.81-38.93s131.73,13.1,192.81,38.93c58.99,24.95,111.96,60.66,157.44,106.15c45.49,45.49,81.2,98.46,106.15,157.44c25.83,61.08,38.93,125.95,38.93,192.81s-13.1,131.73-38.93,192.81c-24.95,58.99-60.66,111.96-106.15,157.44s-98.46,81.2-157.44,106.15C966.01,1092.83,901.14,1105.93,834.28,1105.93z M834.28,143.26c-257.69,0-467.33,209.64-467.33,467.33s209.64,467.33,467.33,467.33s467.33-209.65,467.33-467.33S1091.97,143.26,834.28,143.26z"/></g><g transform="translate(52.390088,-25.058597)"><path fill="#1D1D1B" d="M485.39,356.79l230.07,307.62L483.94,914.52h52.11l202.7-218.98l163.77,218.98h177.32L836.82,589.6l215.5-232.81h-52.11L813.54,558.46L662.71,356.79H485.39z M562.02,395.17h81.46l359.72,480.97h-81.46L562.02,395.17z"/></g></svg>
 </button>`,
-                js: `document.querySelectorAll('.twitter-share-btn').forEach(function(btn) {
+                js: `// X share
+document.querySelectorAll('.twitter-share-btn').forEach(function(btn) {
     btn.addEventListener('click', function(e) {
         e.preventDefault();
         var url = this.getAttribute('data-url') || window.location.href;
@@ -185,7 +184,8 @@
                 html: `<button type="button" class="pinterest-share-btn" data-url="" data-img="@{shareImg}@" data-description="@{metaDescription}@" aria-label="Share on Pinterest" title="Share on Pinterest">
     Share on Pinterest
 </button>`,
-                js: `document.querySelectorAll('.pinterest-share-btn').forEach(function(btn) {
+                js: `// Pinterest share
+document.querySelectorAll('.pinterest-share-btn').forEach(function(btn) {
     btn.addEventListener('click', function(e) {
         e.preventDefault();
         var url = this.getAttribute('data-url') || window.location.href;
@@ -201,7 +201,8 @@
                 html: `<button type="button" class="whatsapp-share-btn" data-url="" style="display:inline-flex; align-items:center; gap:8px; text-decoration:none; color:#189D0E; font-family:arial;" aria-label="Share on Whatsapp" title="Share on Whatsapp">
     Share on Whatsapp
 </button>`,
-                js: `document.querySelectorAll('.whatsapp-share-btn').forEach(function(btn) {
+                js: `// Whatsapp share
+document.querySelectorAll('.whatsapp-share-btn').forEach(function(btn) {
     btn.addEventListener('click', function(e) {
         e.preventDefault();
         var url = this.getAttribute('data-url') || window.location.href;
@@ -223,7 +224,8 @@
                 html: `<button type="button" class="houzz-share-btn" data-url="" data-img="@{mainDomain}@[[image3]]" data-name="@{pageName}@" aria-label="Share on Houzz" title="Share on Houzz">
     Share on Houzz
 </button>`,
-                js: `document.querySelectorAll('.houzz-share-btn').forEach(function(btn) {
+                js: `// Houzz share
+document.querySelectorAll('.houzz-share-btn').forEach(function(btn) {
     btn.addEventListener('click', function(e) {
         e.preventDefault();
         var url = this.getAttribute('data-url') || window.location.href;
@@ -239,7 +241,8 @@
                 html: `<button type="button" class="linkedin-share-btn" data-url="" data-title="כותרת הדף" data-source="שם האתר" aria-label="Share on LinkedIn" title="Share on LinkedIn">
     Share on LinkedIn
 </button>`,
-                js: `document.querySelectorAll('.linkedin-share-btn').forEach(function(btn) {
+                js: `// Linkedin share
+document.querySelectorAll('.linkedin-share-btn').forEach(function(btn) {
     btn.addEventListener('click', function(e) {
         e.preventDefault();
         var url = this.getAttribute('data-url') || window.location.href;
@@ -255,7 +258,8 @@
                 html: `<button type="button" class="email-share-btn" data-url="" aria-label="Share on Email" title="Share on Email">
 	Share on Email
 </button>`,
-                js: `document.querySelectorAll('.email-share-btn').forEach(function(btn) {
+                js: `// Email share
+document.querySelectorAll('.email-share-btn').forEach(function(btn) {
     btn.addEventListener('click', function(e) {
         e.preventDefault();
         var url = this.getAttribute('data-url') || window.location.href;
@@ -269,7 +273,8 @@
                 html: `<button type="button" class="telegram-share-btn" data-url="" aria-label="Share on Telegram" title="Share on Telegram">
     Share on Telegram
 </button>`,
-                js: `document.querySelectorAll('.telegram-share-btn').forEach(function(btn) {
+                js: `// Telegram share
+document.querySelectorAll('.telegram-share-btn').forEach(function(btn) {
     btn.addEventListener('click', function(e) {
         e.preventDefault();
         var url = this.getAttribute('data-url') || window.location.href;
@@ -283,7 +288,8 @@
                 html: `<button type="button" class="print-share-btn" aria-label="הדפסת הדף" title="הדפסת הדף" style="background:none; border:none; cursor:pointer;">
     Print
 </button>`,
-                js: `document.querySelectorAll('.print-share-btn').forEach(function(btn) {
+                js: `// Print
+document.querySelectorAll('.print-share-btn').forEach(function(btn) {
     btn.addEventListener('click', function() {
         window.print();
     });
@@ -309,7 +315,7 @@
                 html: `<button type="button" class="copy-url-btn" data-url="" aria-label="לחצו כאן לCopyת הקישור של הדף" title="לחצו כאן לCopyת הקישור של הדף">
     <svg aria-hidden="true" focusable="false" class="hide-on-check" viewBox="0 0 35 35" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="17.3161" cy="17.3178" r="15.4948" fill="white"/><path d="M0.999023 17.5C0.999023 8.38718 8.3862 1 17.499 1C26.6118 1 33.999 8.38718 33.999 17.5C33.999 26.6128 26.6118 34 17.499 34C8.3862 34 0.999023 26.6128 0.999023 17.5Z" stroke="#140A61" stroke-width="2"/><path d="M20.7133 12.6785H11.6062C10.7186 12.6785 9.99902 13.398 9.99902 14.2856V23.3928C9.99902 24.2804 10.7186 24.9999 11.6062 24.9999H20.7133C21.6009 24.9999 22.3205 24.2804 22.3205 23.3928V14.2856C22.3205 13.398 21.6009 12.6785 20.7133 12.6785Z" fill="#140A61"/><path d="M23.3916 10H13.7487C12.8659 9.99997 12.1484 10.712 12.1416 11.5948C12.1416 11.5991 12.1416 11.6028 12.1416 11.6071H20.713C22.1917 11.6089 23.3899 12.8071 23.3916 14.2857V22.8572C23.3959 22.8572 23.3996 22.8572 23.4039 22.8572C24.2867 22.8504 24.9988 22.1328 24.9988 21.25V11.6071C24.9988 10.7195 24.2792 10 23.3916 10Z" fill="#140A61"/></svg>
     <svg aria-hidden="true" focusable="false" class="show-on-check" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><g><path d="M16,31A15,15,0,1,1,31,16,15,15,0,0,1,16,31ZM16,3A13,13,0,1,0,29,16,13,13,0,0,0,16,3Z" fill="#166354"/><path d="M13.67,22a1,1,0,0,1-.73-.32l-4.67-5a1,1,0,0,1,1.46-1.36l3.94,4.21,8.6-9.21a1,1,0,1,1,1.46,1.36l-9.33,10A1,1,0,0,1,13.67,22Z" fill="#166354"/></g></svg>
-    <div class="msg" role="status" aria-live="polite">הקישור הועתק</div>
+    <div class="msg" role="status" aria-live="polite">הקישור Copied</div>
 </button>`,
                 css: `.copy-url-btn {
 	position: relative;
@@ -369,7 +375,8 @@
 	visibility: visible;
 	transform: translate(50%, 0);
 }`,
-                js: `document.querySelectorAll('.copy-url-btn').forEach(function(btn) {
+                js: `// Copy page URL
+document.querySelectorAll('.copy-url-btn').forEach(function(btn) {
     btn.addEventListener('click', function() {
         var urlToCopy = this.getAttribute('data-url');
         if (!urlToCopy) {
@@ -459,7 +466,7 @@
 
         function handleBtnState(btn) {
             const originalText = btn.innerText;
-            btn.innerText = 'הועתק!';
+            btn.innerText = 'Copied!';
             btn.classList.add('copied');
             setTimeout(() => {
                 btn.innerText = originalText;

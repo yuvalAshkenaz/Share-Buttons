@@ -10,58 +10,105 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-php.min.js"></script>
 
     <style>
-        /* עיצוב הדף המרכזי */
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f0f2f5; margin: 0; padding: 40px 20px; color: #333; }
-        .header { text-align: center; margin-bottom: 40px; }
-        .header h1 { margin: 0 0 10px 0; color: #1a1a1a; }
+       /* =========================================
+           עיצוב לוח הבקרה - סגנון עורך קוד מודרני (Dark Theme)
+           ========================================= */
+        body { 
+            font-family: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
+            background: #f1f5f9; /* רקע אפרפר-כחלחל עדין ויוקרתי */
+            margin: 0; 
+            padding: 50px 20px; 
+            color: #1e293b; 
+        }
         
-        .container { max-width: 1200px; margin: 0 auto; display: flex; flex-direction: column; gap: 30px; }
-        .card { background: #fff; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); overflow: hidden; display: flex; flex-direction: column; }
+        .header { text-align: center; margin-bottom: 50px; }
+        .header h1 { margin: 0; font-size: 2.5rem; color: #0f172a; font-weight: 800; letter-spacing: -0.5px; }
+        
+        .container { max-width: 1200px; margin: 0 auto; display: grid; gap: 40px; }
+        
+        .card { 
+            background: #fff; 
+            border-radius: 16px; 
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05); 
+            border: 1px solid #e2e8f0;
+            overflow: hidden; 
+            display: flex; 
+            flex-direction: column; 
+            transition: all 0.3s ease;
+        }
         
         /* אזור עליון - כותרת ותצוגה מקדימה */
-        .card-header { padding: 20px 30px; background: #fafafa; border-bottom: 1px solid #eee; display: flex; align-items: center; gap: 20px; }
-        .card-header h3 { margin: 0; font-size: 20px; color: #444; }
-        .card-header .icon-preview { display: flex; align-items: center; gap: 10px; }
+        .card-header { 
+            padding: 24px 32px; 
+            background: #ffffff; 
+            border-bottom: 1px dashed #cbd5e1; 
+            display: flex; 
+            align-items: center; 
+            gap: 20px; 
+        }
         
-        /* עיצוב כללי לכפתורים ולקישורים בתצוגה המקדימה */
-        .card-header button, .card-header a { margin: 0; padding: 0; background: none; border: none; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; justify-content: center;gap:12px; }
-        .card-header .icon-preview svg { width: 40px; height: 40px; display: block; }
-        .card-header .icon-preview a.text-link { color: #007BB5; font-weight: bold; font-size: 16px; font-family: arial; text-decoration: underline; }
+        .card-header h3 { margin: 0; font-size: 22px; color: #334155; font-weight: 600; }
+        .card-header .icon-preview { display: flex; align-items: center; gap: 15px; }
         
-        /* אזור הקוד למטה - העיצוב המבוקש */
+        /* העיצוב הכללי של הכפתורים בתוך התצוגה המקדימה */
+        .card-header button, .card-header a { 
+			gap: 10px;
+            margin: 0; padding: 0; background: none; border: none; cursor: pointer; text-decoration: none; 
+            display: inline-flex; align-items: center; justify-content: center; 
+            transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .card-header .icon-preview svg { width: 44px; height: 44px; display: block; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1)); }
+        .card-header .icon-preview a.text-link { color: #2563eb; font-weight: bold; font-size: 16px; text-decoration: none; font-family: arial;}
+        .card-header .icon-preview a.text-link:hover { text-decoration: underline; color: #1d4ed8; }
+        
+        /* אזור הקוד למטה - מראה של קונסולה / עורך קוד */
         .card-code { 
             position: relative; 
-            background: #e9e9e9; /* רקע אפור בהיר חיצוני */
-            padding: 20px;
+            background: #ffffff; 
+            padding: 24px 32px;
         }
         
         .card-code pre { 
             margin: 0; 
             white-space: pre-wrap; 
             word-wrap: break-word; 
-            font-family: Consolas, Monaco, monospace; 
+            font-family: 'Fira Code', 'Courier New', Courier, monospace; 
             font-size: 14px; 
             direction: ltr; 
             text-align: left; 
-            line-height: 1.4;
+            line-height: 1.6;
             max-height: 300px; /* הגבלת גובה */
             overflow-y: auto;  /* גלילה */
-            background: #f4f4f4 !important; /* דריסת הרקע של פריזם לאפור בהיר מאוד */
-            border: 2px solid #555; /* מסגרת אפורה כהה */
-            padding: 15px;
-            border-radius: 6px;
+            color: #e2e8f0 !important;
+            border: 1px solid #1e293b; 
+            padding: 50px 20px 20px;
+            border-radius: 12px;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.5);
         }
         
-        /* עיצוב פס הגלילה */
-        .card-code pre::-webkit-scrollbar { width: 8px; }
-        .card-code pre::-webkit-scrollbar-track { background: #e1e1e1; border-radius: 4px;}
-        .card-code pre::-webkit-scrollbar-thumb { background: #888; border-radius: 4px; }
-        .card-code pre::-webkit-scrollbar-thumb:hover { background: #555; }
-        
-        /* כפתור העתקה */
-        .copy-btn { position: absolute; top: 35px; right: 40px; background: #007BB5; color: #fff; border: none; padding: 6px 14px; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 13px; z-index: 10; box-shadow: 0 2px 4px rgba(0,0,0,0.1); transition: background 0.2s; }
-        .copy-btn:hover { background: #005882; }
-        .copy-btn.copied { background: #189D0E; }
+        /* כפתור העתקה מרחף - אפקט שקוף מודרני */
+        .copy-btn { 
+            position: absolute; 
+            top: 36px; 
+            right: 44px;
+            background: #0f172a;
+            color: #fff; 
+            border: 1px solid rgba(255, 255, 255, 0.2); 
+            padding: 6px 16px; 
+            border-radius: 8px; 
+            cursor: pointer; 
+            font-weight: 600; 
+            font-size: 13px; 
+            z-index: 10; 
+            transition: all 0.2s ease; 
+            letter-spacing: 0.5px;
+        }
+        .copy-btn.copied { 
+            background: #10b981; /* צבע ירוק רענן להצלחה */
+            border-color: #10b981;
+            color: #fff;
+            box-shadow: 0 0 10px rgba(16, 185, 129, 0.4);
+        }
     </style>
 </head>
 <body>
@@ -178,7 +225,7 @@
 .copy-url-btn.active .msg { opacity: 1; visibility: visible; transform: translate(50%, 0); }
 </style>
 
-<button type="button" class="copy-url-btn" aria-label="לחצו כאן להעתקת הקישור של הדף" title="לחצו כאן להעתקת הקישור של הדף">
+<button type="button" class="copy-url-btn" data-url="<?php echo esc_url(get_permalink()); ?>" aria-label="לחצו כאן להעתקת הקישור של הדף" title="לחצו כאן להעתקת הקישור של הדף">
     <svg aria-hidden="true" focusable="false" class="hide-on-check" viewBox="0 0 35 35" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="17.3161" cy="17.3178" r="15.4948" fill="white"/><path d="M0.999023 17.5C0.999023 8.38718 8.3862 1 17.499 1C26.6118 1 33.999 8.38718 33.999 17.5C33.999 26.6128 26.6118 34 17.499 34C8.3862 34 0.999023 26.6128 0.999023 17.5Z" stroke="#140A61" stroke-width="2"/><path d="M20.7133 12.6785H11.6062C10.7186 12.6785 9.99902 13.398 9.99902 14.2856V23.3928C9.99902 24.2804 10.7186 24.9999 11.6062 24.9999H20.7133C21.6009 24.9999 22.3205 24.2804 22.3205 23.3928V14.2856C22.3205 13.398 21.6009 12.6785 20.7133 12.6785Z" fill="#140A61"/><path d="M23.3916 10H13.7487C12.8659 9.99997 12.1484 10.712 12.1416 11.5948C12.1416 11.5991 12.1416 11.6028 12.1416 11.6071H20.713C22.1917 11.6089 23.3899 12.8071 23.3916 14.2857V22.8572C23.3959 22.8572 23.3996 22.8572 23.4039 22.8572C24.2867 22.8504 24.9988 22.1328 24.9988 21.25V11.6071C24.9988 10.7195 24.2792 10 23.3916 10Z" fill="#140A61"/></svg>
     <svg aria-hidden="true" focusable="false" class="show-on-check" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><g><path d="M16,31A15,15,0,1,1,31,16,15,15,0,0,1,16,31ZM16,3A13,13,0,1,0,29,16,13,13,0,0,0,16,3Z" fill="#166354"/><path d="M13.67,22a1,1,0,0,1-.73-.32l-4.67-5a1,1,0,0,1,1.46-1.36l3.94,4.21,8.6-9.21a1,1,0,1,1,1.46,1.36l-9.33,10A1,1,0,0,1,13.67,22Z" fill="#166354"/></g></svg>
     <div class="msg" role="status" aria-live="polite">הקישור הועתק</div>
@@ -187,7 +234,7 @@
 <script>
 document.querySelectorAll('.copy-url-btn').forEach(btn => {
     btn.addEventListener('click', function() {
-        const urlToCopy = '<?php echo esc_url(get_permalink()); ?>' || window.location.href; 
+        const urlToCopy = btn.getAttribute('data-url') || window.location.href; 
         if (navigator.clipboard && window.isSecureContext) {
             navigator.clipboard.writeText(urlToCopy).then(() => showSuccess(this));
         } else {

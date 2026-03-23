@@ -263,7 +263,7 @@ document.querySelectorAll('.email-share-btn').forEach(function(btn) {
     btn.addEventListener('click', function(e) {
         e.preventDefault();
         var url = this.getAttribute('data-url') || window.location.href;
-        window.location.href = 'mailto:?subject=' + encodeURIComponent('אני רוצה לשתף איתך קישור') + '&body=' + encodeURIComponent(url);
+        window.location.href = 'mailto:?subject=' + encodeURIComponent('I want to share a link with you') + '&body=' + encodeURIComponent(url);
     });
 });`
             },

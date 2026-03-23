@@ -59,3 +59,8 @@ document.querySelectorAll('.facebook-share-btn').forEach(function(btn) {
     });
 });
 </script>
+```
+## 🎨 Preview Dashboard
+This project comes with an index.html file (the complete button library) that serves as your personal workspace.
+
+Simply open the file in any browser to see a live preview of all the buttons, copy the separated code blocks (HTML/CSS/JS) with a single click, and test their functionality in real-time.
